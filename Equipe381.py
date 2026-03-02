@@ -32,6 +32,20 @@ def g2(Q: float) -> float:
     # g2(Q) = 10 - 2 e^Q
     return 10 - 2 * math.exp(Q)
 
+def f_newton(Q: float) -> float:
+    # f(Q) = e^Q + Q/2 - 5
+    return math.exp(Q) + Q / 2 - 5
+
+
+def fp_newton(Q: float) -> float:
+    # f'(Q) = e^Q + 1/2
+    return math.exp(Q) + 0.5
+
+
+def gN(Q: float) -> float:
+    # Newton sous forme point fixe : Q_{n+1} = Q_n - f(Q_n)/f'(Q_n)
+    return Q - f_newton(Q) / fp_newton(Q)
+
 
 # --- Outil pour construire/afficher le tableau demandé ---
 def construire_lignes_tableau(iterations: list[float], max_n: int | None = None) -> list[str]:
@@ -87,6 +101,17 @@ def imprimer_tableau(iterations: list[float], titre: str, max_n: int | None = No
     for ligne in construire_lignes_tableau(iterations, max_n=max_n):
         print(ligne)
 
+# --- Steffensen (Aitken Δ²) ---
+def steffensen(g):
+    def gS(Q: float) -> float:
+        y = g(Q)        # g(Q)
+        z = g(y)        # g(g(Q))
+        denom = z - 2*y + Q
+        if denom == 0:
+            return y    # fallback pour éviter division par 0
+        return Q - (y - Q)**2 / denom
+    return gS
+
 
 if __name__ == "__main__":
     # Paramètres imposés par l'énoncé
@@ -98,13 +123,38 @@ if __name__ == "__main__":
     it_g1 = pointfixe(g1, Q0, tolr, nmax)
     imprimer_tableau(
         it_g1,
-        "Tableau (j) - Point fixe avec g1(Q) = ln(5 - Q/2) : convergence attendue d'ordre 1"
+        "Tableau (1) - Point fixe avec g1(Q) = ln(5 - Q/2) : convergence attendue d'ordre 1"
     )
 
     # --- g2 : seulement 5 premières itérations (jusqu'à Q5) ---
     it_g2 = pointfixe(g2, Q0, tolr, nmax)
     imprimer_tableau(
         it_g2,
-        "Tableau (j) - Point fixe avec g2(Q) = 10 - 2 e^Q : divergence attendue (afficher jusqu'à Q5)",
+        "Tableau (2) - Point fixe avec g2(Q) = 10 - 2 e^Q : divergence attendue (afficher jusqu'à Q5)",
         max_n=5
     )
+    it_gN = pointfixe(gN, Q0, tolr, nmax)
+
+    with open("tableau_newton.txt", "w", encoding="utf-8") as f:
+        f.write("Tableau (3) - Newton\n")
+        for ligne in construire_lignes_tableau(it_gN):
+            f.write(ligne + "\n")
+    
+    imprimer_tableau(
+        it_gN,
+        "Tableau (3) - Newton via gN(Q) = Q - f(Q)/f'(Q) : convergence attendue d'ordre 2"
+    )
+
+    # --- m) Steffensen sur g1, g2, gN ---
+    g1S = steffensen(g1)
+    g2S = steffensen(g2)
+    gNS = steffensen(gN)
+
+    it_g1S = pointfixe(g1S, Q0, tolr, nmax)
+    it_g2S = pointfixe(g2S, Q0, tolr, nmax)
+    it_gNS = pointfixe(gNS, Q0, tolr, nmax)
+
+    # Réutilise EXACTEMENT la même fonction d'affichage que pour j/l
+    imprimer_tableau(it_g1S, "Tableau (4) - Steffensen appliqué à g1")
+    imprimer_tableau(it_g2S, "Tableau (5) - Steffensen appliqué à g2 (jusqu'à Q5)", max_n=5)
+    imprimer_tableau(it_gNS, "Tableau (6) - Steffensen appliqué à gN (Newton)")
