@@ -9,18 +9,20 @@ print(resultat)
 
 # les lignes de codes ci dessous nous ont été utiliser pour calculer certaines valeurs pour le rapport
 # si nous aurions utiliser une calculatrice nous aurions perdu de la précision
+def tableau_simple():
+    erreurO = math.exp(1.7726325988769531)
+    entête = '=' * 100 + '\n' + 'TABLEAU 0 -- Méthode de la bissection\n' + '-' * 100
+    ligne= 'n = 18' + '\n' + 'Q18 = 1.7726325988769531' + '\n' + 'F(Q18) = 1.302597E-05' + '\n' + 'Erreur O(Q) = ' + str(erreurO) + '\n' + 'Erreur D(Q) = 0.5' + '\n' + 'Valeur de O(Q) (5 C.S) = 5.88633' + '\n' + 'Valeur de D(Q) (5 C.S.) = 4.11368'
+    sous_entete = '=' * 100
+    rapporterreur = (erreurO) / 0.5
+    valeurO = math.exp(1.7726325988769531)
+    valeurD = 5 - ((1.7726325988769531) / 2)
+    print(entête)
+    print(ligne)
+    print(sous_entete)
 
-# pour la question d)
-erreurO = math.exp(1.7726325988769531)
-#print('erreurO = ', {erreurO})
-rapporterreur = (erreurO) / 0.5
-#print('erreur = ', {rapporterreur})
 
-# pour la question e)
-valeurO = math.exp(1.7726325988769531)
-#print('valeurO = ', {valeurO})
-valeurD = 5 - ((1.7726325988769531) / 2) 
-#print('valeurD = ', {valeurD})
+tableau_simple()
 
 # --- Fonctions de point fixe (celles données dans l'énoncé) ---
 def g1(Q: float) -> float:
