@@ -156,5 +156,5 @@ if __name__ == "__main__":
 
     # Réutilise EXACTEMENT la même fonction d'affichage que pour j/l
     imprimer_tableau(it_g1S, "Tableau (4) - Steffensen appliqué à g1")
-    imprimer_tableau(it_g2S, "Tableau (5) - Steffensen appliqué à g2 (jusqu'à Q5)", max_n=5)
+    imprimer_tableau(it_g2S, "Tableau (5) - Steffensen appliqué à g2 (jusqu'à Q10)", max_n=10)
     imprimer_tableau(it_gNS, "Tableau (6) - Steffensen appliqué à gN (Newton)")
